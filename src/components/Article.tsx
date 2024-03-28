@@ -1,9 +1,9 @@
-import { generateArticleMetadata } from '@/components/Article';
 import { getPostById } from '@/lib/api';
 import { notFound } from 'next/navigation';
+import React from 'react';
 
-async function Home() {
-  const post = await getPostById('homepage');
+export async function ArticlePage({ slug }: { slug: string }) {
+  const post = await getPostById(slug);
 
   if (!post) return notFound();
 
@@ -20,8 +20,9 @@ async function Home() {
   );
 }
 
-export async function generateMetadata() {
-  return await generateArticleMetadata('homepage');
+export async function generateArticleMetadata(slug: string) {
+  const post = await getPostById(slug);
+  if (!post) return notFound();
+  const { title } = post;
+  return { title };
 }
-
-export default Home;

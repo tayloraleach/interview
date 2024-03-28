@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import PageNavigation from '@/components/PageNavigation';
-import SectionLayout from '@/components/layouts/SectionLayout';
+import GlobalLayout from '@/components/layouts/GlobalLayout';
+import ArticleLayout from '@/components/layouts/ArticleLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,7 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang='en'>
       <body className={inter.className}>
         <PageNavigation />
-        <SectionLayout>{children}</SectionLayout>
+        <GlobalLayout>
+          <ArticleLayout>{children}</ArticleLayout>
+        </GlobalLayout>
       </body>
     </html>
   );
