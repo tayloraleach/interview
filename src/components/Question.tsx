@@ -6,24 +6,28 @@ export async function QuestionPage({ slug }: { slug: string }) {
 
   if (!post) return notFound();
 
-  const { title, html: __html, section } = post;
+  const { title, html: __html, sections } = post;
 
   return (
     <>
-      <div className='text-sm breadcrumbs'>
-        <ul>
-          <li>
-            <a href='/'>Home</a>
-            {/* // add section data, grab from api? */}
-          </li>
-          <li>{section}</li>
-        </ul>
-      </div>
+      {sections && <Breadcrumbs sections={sections} />}
       <div className='collapse collapse-arrow bg-base-300'>
         <input type='radio' name='question' />
-        <h1 className='collapse-title text-center mb-0'>{title}</h1>
+        <h1 className='collapse-title text-center mb-0 sm:mb-0 py-8 lg:py-16'>{title}</h1>
         <div className='collapse-content' dangerouslySetInnerHTML={{ __html }}></div>
       </div>
     </>
+  );
+}
+
+function Breadcrumbs({ sections }: { sections: { link?: string; label: string }[] }) {
+  return (
+    <div className='text-sm breadcrumbs pb-4 pt-0'>
+      <ul className='lg:m-0 lg:p-0 p-0 m-0'>
+        {sections.map(({ link, label }) => {
+          return <li key={label}>{link ? <a href={link}>{label}</a> : label}</li>;
+        })}
+      </ul>
+    </div>
   );
 }

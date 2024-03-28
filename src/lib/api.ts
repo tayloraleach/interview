@@ -42,6 +42,13 @@ function getParser() {
 const parser = getParser();
 const postsDirectory = path.join(process.cwd(), '/src/_posts/');
 
+const SECTION_NAMES: { [key: string]: string } = {
+  css: 'CSS',
+  html: 'HTML',
+  javascript: 'JavaScript',
+  react: 'React',
+};
+
 export async function getPostById(id: string) {
   try {
     const realId = id.replace(/\.md$/, '');
@@ -51,11 +58,18 @@ export async function getPostById(id: string) {
     const html = await parser.process(content);
     const date = data.date as Date;
 
+    // Sketchy for sure, but works for now with single level directory structure of topics
+    const section = realId.substring(0, realId.indexOf('/'));
+
     return {
       ...data,
       title: data.title as string,
       overline: data?.overline as string,
-      section: '--', // get from dir?
+      sections: [
+        { link: '/', label: 'Home' },
+        { link: `/${section}`, label: SECTION_NAMES[section] || section },
+        { label: (data?.metaTitle as string) || (data.title as string) },
+      ],
       id: realId,
       date: `${date.toISOString().slice(0, 10)}`,
       html: html.value.toString(),

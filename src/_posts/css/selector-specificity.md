@@ -1,4 +1,5 @@
 ---
+metaTitle: CSS selector specificity
 title: What is CSS selector specificity and how does it work?
 date: 2024-03-28
 ---
