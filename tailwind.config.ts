@@ -8,7 +8,7 @@ const config: Config = {
     './src/lib/**/*.{js,ts}',
   ],
   daisyui: {
-    themes: ['coffee'],
+    // themes: ['coffee'],
   },
   theme: {
     extend: {},

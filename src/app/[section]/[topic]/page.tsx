@@ -1,4 +1,5 @@
 import { ArticlePage, generateArticleMetadata } from '@/components/Article';
+import { QuestionPage } from '@/components/Question';
 import { getSectionTopicPostFiles } from '@/lib/api';
 
 export type SectionTopicParams = { section: string; topic: string };
@@ -6,7 +7,7 @@ export type SectionTopicParams = { section: string; topic: string };
 const getPathFromParams = (params: SectionTopicParams) => `${params.section}/${params.topic}`;
 
 export default function Page({ params }: { params: SectionTopicParams }) {
-  return <ArticlePage slug={getPathFromParams(params)} />;
+  return <QuestionPage slug={getPathFromParams(params)} />;
 }
 
 export async function generateMetadata({ params }: { params: SectionTopicParams }) {
@@ -15,7 +16,6 @@ export async function generateMetadata({ params }: { params: SectionTopicParams 
 
 export async function generateStaticParams() {
   const sectionTopicPosts = await getSectionTopicPostFiles();
-  console.log(sectionTopicPosts);
   if (sectionTopicPosts && sectionTopicPosts?.length > 0) {
     const staticPages = sectionTopicPosts.map((post) => ({
       section: post.section,

@@ -8,7 +8,7 @@ export default function PageNavigation() {
   const pathname = usePathname();
 
   return (
-    <div key={pathname} className='navbar bg-base-100'>
+    <div key={pathname} className='navbar bg-base-300'>
       <div className='navbar-start'>
         <div className='dropdown'>
           <div tabIndex={0} role='button' className='btn btn-ghost lg:hidden'>
@@ -28,13 +28,10 @@ export default function PageNavigation() {
           </div>
           <ul
             tabIndex={0}
-            className='menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52'>
+            className='menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-300 rounded-box w-52'>
             <MenuItems />
           </ul>
         </div>
-        <Link href='/' className='btn text-xl'>
-          Taylor Leach
-        </Link>
       </div>
       <div className='navbar-center hidden lg:flex'>
         <ul className='menu menu-horizontal px-1'>
@@ -49,6 +46,9 @@ export default function PageNavigation() {
 function MenuItems() {
   return (
     <>
+      <li>
+        <Link href='/'>Home</Link>
+      </li>
       <li>
         <Link href='/javascript'>JavaScript</Link>
       </li>

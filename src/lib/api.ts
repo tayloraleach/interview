@@ -11,26 +11,32 @@ import rehypeStringify from 'rehype-stringify';
 import rehypePrettyCode from 'rehype-pretty-code';
 import { readdir } from 'fs/promises';
 import { SectionTopicParams } from '@/app/[section]/[topic]/page';
+import addClasses from 'rehype-class-names';
+// import rehypeWrap from 'rehype-wrap-all';
 
 function getParser() {
-  return unified()
-    .use(remarkParse)
-    .use(remarkRehype)
-    .use(remarkGfm)
-    .use(rehypePrettyCode, { theme: 'one-dark-pro' })
-    .use(rehypeStringify)
-    .use(rehypeSlug)
-    .use(rehypeAutolinkHeadings, {
-      content: ({ properties }) => ({
-        type: 'element',
-        tagName: 'a',
-        properties: {
-          href: `#${String(properties?.id)}`,
-          class: 'mr-2',
-        },
-        children: [{ type: 'text', value: '#' }],
-      }),
-    });
+  return (
+    unified()
+      .use(remarkParse)
+      .use(remarkRehype)
+      .use(remarkGfm)
+      .use(rehypePrettyCode, { theme: 'one-dark-pro' })
+      .use(rehypeStringify)
+      // .use(rehypeWrap, { selector: 'pre', wrapper: 'div.mockup-code' })
+      .use(addClasses, { code: 'whitespace-break-spaces' })
+      .use(rehypeSlug)
+      .use(rehypeAutolinkHeadings, {
+        content: ({ properties }) => ({
+          type: 'element',
+          tagName: 'a',
+          properties: {
+            href: `#${String(properties?.id)}`,
+            class: 'mr-2',
+          },
+          children: [{ type: 'text', value: '#' }],
+        }),
+      })
+  );
 }
 
 const parser = getParser();
@@ -49,6 +55,7 @@ export async function getPostById(id: string) {
       ...data,
       title: data.title as string,
       overline: data?.overline as string,
+      section: '--', // get from dir?
       id: realId,
       date: `${date.toISOString().slice(0, 10)}`,
       html: html.value.toString(),
