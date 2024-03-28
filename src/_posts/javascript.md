@@ -3,13 +3,13 @@ title: JavaScript Topics
 date: 2024-03-27
 ---
 
-- [Explain event delegation.](/event-delegation/)
+<!-- - [Explain event delegation.](/event-delegation/) -->
 
-- [Explain how this works in JavaScript.](/what-is-this/)
+<!-- - [Explain how this works in JavaScript.](/what-is-this/) -->
 
-- [What is a closure, and how/why would you use one?](/closures)
+- [What is a closure, and how/why would you use one?](/javascript/closures)
 
-- [Explain how prototypal inheritance works.](/prototypal-inheritance)
+<!-- - [Explain how prototypal inheritance works.](/prototypal-inheritance) -->
 
 <!-- - [What is the difference between a variable that is: null, undefined or undeclared?]()
 

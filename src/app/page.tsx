@@ -2,6 +2,7 @@ import { generateArticleMetadata } from '@/components/Article';
 import { getPostById } from '@/lib/api';
 import { notFound } from 'next/navigation';
 
+// Not sure this page is connected to the statically generated homepage
 async function Home() {
   const post = await getPostById('homepage');
 

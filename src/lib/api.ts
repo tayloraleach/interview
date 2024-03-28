@@ -9,8 +9,8 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import rehypePrettyCode from 'rehype-pretty-code';
-
-const postsDirectory = path.join(process.cwd(), '/src/_posts/');
+import { readdir } from 'fs/promises';
+import { SectionTopicParams } from '@/app/[section]/[topic]/page';
 
 function getParser() {
   return unified()
@@ -19,23 +19,22 @@ function getParser() {
     .use(remarkGfm)
     .use(rehypePrettyCode, { theme: 'one-dark-pro' })
     .use(rehypeStringify)
-    .use(rehypeStringify)
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, {
-      content: (arg) => ({
+      content: ({ properties }) => ({
         type: 'element',
         tagName: 'a',
         properties: {
-          href: `#${String(arg.properties?.id)}`,
-          style: 'margin-right: 10px',
+          href: `#${String(properties?.id)}`,
+          class: 'mr-2',
         },
         children: [{ type: 'text', value: '#' }],
       }),
     });
 }
 
-// small speedup from caching this parser
 const parser = getParser();
+const postsDirectory = path.join(process.cwd(), '/src/_posts/');
 
 export async function getPostById(id: string) {
   try {
@@ -60,21 +59,56 @@ export async function getPostById(id: string) {
   }
 }
 
-export async function getPageMarkdown(string_: string) {
-  const { data, content } = matter(fs.readFileSync(path.join('_pages', string_), 'utf8'));
-  const html = await parser.process(content);
-
-  return {
-    ...data,
-    html: html.value.toString(),
-  };
+export async function getSectionPostFiles() {
+  try {
+    const files = await readdir(postsDirectory);
+    return files.filter((file) => file.endsWith('.md')).map((file) => file.replace(/\.md$/, ''));
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-// function getPostFiles() {
-//   return fs.readdirSync(postsDirectory);
-// }
+function getFilesInOneLevelDeep(
+  directoryPath: string,
+  callback: (e: any, x?: SectionTopicParams[]) => void
+) {
+  fs.readdir(directoryPath, (err, files) => {
+    if (err) {
+      callback(err);
+      return;
+    }
 
-// export async function getAllPosts() {
-//   const posts = await Promise.all(getPostFiles().map((id) => getPostById(id)));
-//   return posts.sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
-// }
+    const filesInOneLevelDeep: SectionTopicParams[] = [];
+
+    files.forEach((file) => {
+      const filePath = path.join(directoryPath, file);
+      const stats = fs.statSync(filePath);
+      if (stats.isDirectory()) {
+        const subFiles = fs.readdirSync(filePath);
+        subFiles.forEach((subFile) => {
+          const subFilePath = path.join(filePath, subFile);
+          const relativePath = subFilePath.replace(directoryPath, '');
+          filesInOneLevelDeep.push({
+            section: relativePath.substring(0, relativePath.indexOf('/')),
+            topic: subFile.replace(/\.md$/, ''),
+          });
+        });
+      }
+    });
+
+    callback(undefined, filesInOneLevelDeep);
+  });
+}
+
+export async function getSectionTopicPostFiles() {
+  const files: SectionTopicParams[] = await new Promise((resolve, reject) => {
+    getFilesInOneLevelDeep(postsDirectory, (error, files) => {
+      if (error) {
+        reject(error);
+      } else if (files) {
+        resolve(files);
+      }
+    });
+  });
+  return files || [];
+}
