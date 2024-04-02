@@ -16,7 +16,7 @@ async function Home() {
         {overline && <span className='block mb-8'>{overline}</span>}
         {title}
       </h1>
-      <div dangerouslySetInnerHTML={{ __html }} />
+      {__html && <div dangerouslySetInnerHTML={{ __html }} />}
     </>
   );
 }

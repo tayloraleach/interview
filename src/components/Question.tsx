@@ -15,7 +15,7 @@ export async function QuestionPage({ slug }: { slug: string }) {
       <div className='collapse collapse-arrow bg-base-300'>
         <input type='radio' name='question' />
         <h1 className='collapse-title text-center mb-0 sm:mb-0 py-8 lg:py-16'>{title}</h1>
-        <div className='collapse-content' dangerouslySetInnerHTML={{ __html }}></div>
+        {__html && <div className='collapse-content' dangerouslySetInnerHTML={{ __html }}></div>}
       </div>
     </>
   );
