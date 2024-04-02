@@ -14,6 +14,16 @@ import { SectionTopicParams } from '@/app/[section]/[topic]/page';
 import addClasses from 'rehype-class-names';
 // import rehypeWrap from 'rehype-wrap-all';
 
+export type Post = {
+  id: string;
+  title: string;
+  metaTitle?: string;
+  sections: any[]; // fix me
+  date?: string;
+  overline?: string;
+  html?: string;
+};
+
 function getParser() {
   return (
     unified()
@@ -42,14 +52,7 @@ function getParser() {
 const parser = getParser();
 const postsDirectory = path.join(process.cwd(), '/src/_posts/');
 
-const SECTION_NAMES: { [key: string]: string } = {
-  css: 'CSS',
-  html: 'HTML',
-  javascript: 'JavaScript',
-  react: 'React',
-};
-
-export async function getPostById(id: string) {
+export async function getPostById(id: string): Promise<Post | undefined> {
   try {
     const realId = id.replace(/\.md$/, '');
     const fullPath = path.join(postsDirectory, `${realId}.md`);
@@ -58,38 +61,44 @@ export async function getPostById(id: string) {
     const html = await parser.process(content);
     const date = data.date as Date;
 
-    // Sketchy for sure, but works for now with single level directory structure of topics
+    // Sketchy for sure, but works for now with a SINGLE level directory structure of topics
     const section = realId.substring(0, realId.indexOf('/'));
+    const sectionTitle = (data?.metaTitle as string) || (data.title as string);
+    const sections: { link?: string; label: string }[] = [{ link: '/', label: 'Home' }];
+
+    if (section) {
+      const sectionPath = path.join(postsDirectory, `${section}.md`);
+      const { data: sectionData } = matter(await fs.promises.readFile(sectionPath, 'utf8'));
+      sections.push({ link: `/${section}`, label: sectionData.title });
+      sections.push({ label: sectionTitle });
+    } else {
+      sections.push({ label: sectionTitle });
+    }
 
     return {
       ...data,
       title: data.title as string,
       overline: data?.overline as string,
-      sections: [
-        { link: '/', label: 'Home' },
-        { link: `/${section}`, label: SECTION_NAMES[section] || section },
-        { label: (data?.metaTitle as string) || (data.title as string) },
-      ],
+      sections,
       id: realId,
       date: `${date.toISOString().slice(0, 10)}`,
       html: html.value.toString(),
     };
   } catch (err) {
     console.log(err);
-    return null;
   }
 }
 
-export async function getSectionPostFiles() {
+export async function getSectionPostFiles(dir?: string) {
   try {
-    const files = await readdir(postsDirectory);
+    const files = await readdir(dir ? postsDirectory + dir : postsDirectory);
     return files.filter((file) => file.endsWith('.md')).map((file) => file.replace(/\.md$/, ''));
   } catch (err) {
     console.error(err);
   }
 }
 
-function getFilesInOneLevelDeep(
+export function getFilesInOneLevelDeep(
   directoryPath: string,
   callback: (e: any, x?: SectionTopicParams[]) => void
 ) {
