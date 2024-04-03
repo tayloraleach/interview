@@ -1,4 +1,4 @@
-import { ArticlePage, generateArticleMetadata } from '@/components/Article';
+import { generateArticleMetadata } from '@/components/Article';
 import { QuestionPage } from '@/components/Question';
 import { getSectionTopicPostFiles } from '@/lib/api';
 

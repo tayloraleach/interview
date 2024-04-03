@@ -1,11 +1,28 @@
 'use client';
 
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+
+const LOCAL_STORAGE_KEY = 'fe-interview-prep';
 
 export default function PageNavigation() {
   const pathname = usePathname();
+
+  async function handleGoToRandomQuestion() {
+    const randomPost = await fetch('/api/random-post').then((res) => res.json());
+    const currentPost = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+
+    if (randomPost.href === currentPost) {
+      return handleGoToRandomQuestion();
+    } else {
+      window.location = randomPost.href;
+    }
+  }
+
+  useEffect(() => {
+    window.localStorage.setItem(LOCAL_STORAGE_KEY, new URL(window.location.href).pathname);
+  }, []);
 
   return (
     <div key={pathname} className='navbar bg-base-300'>
@@ -38,7 +55,11 @@ export default function PageNavigation() {
           <MenuItems />
         </ul>
       </div>
-      <div className='navbar-end'></div>
+      <div className='navbar-end'>
+        <button onClick={handleGoToRandomQuestion} className='btn btn-primary btn-sm mr-1'>
+          Random Question
+        </button>
+      </div>
     </div>
   );
 }
