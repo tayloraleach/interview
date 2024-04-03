@@ -25,7 +25,9 @@ export default function PageNavigation() {
   }, []);
 
   return (
-    <div key={pathname} className='navbar bg-base-300'>
+    <div
+      key={pathname}
+      className='navbar bg-base-300 sticky top-0 z-10 border-solid border-b border-accent'>
       <div className='navbar-start'>
         <div className='dropdown'>
           <div tabIndex={0} role='button' className='btn btn-ghost lg:hidden'>
@@ -64,24 +66,22 @@ export default function PageNavigation() {
   );
 }
 
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/javascript', label: 'JavaScript' },
+  { href: '/css', label: 'CSS' },
+  { href: '/html', label: 'HTML' },
+  { href: '/react', label: 'React' },
+];
+
 function MenuItems() {
   return (
     <>
-      <li>
-        <Link href='/'>Home</Link>
-      </li>
-      <li>
-        <Link href='/javascript'>JavaScript</Link>
-      </li>
-      <li>
-        <Link href='/css'>CSS</Link>
-      </li>
-      <li>
-        <Link href='/html'>HTML</Link>
-      </li>
-      <li>
-        <Link href='/react'>React</Link>
-      </li>
+      {links.map(({ href, label }) => (
+        <li className={'p-1'} key={label}>
+          <Link href={href}>{label}</Link>
+        </li>
+      ))}
     </>
   );
 }
