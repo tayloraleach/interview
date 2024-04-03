@@ -1,6 +1,8 @@
 import { getSectionTopicPostFiles } from '@/lib/api';
 import { NextResponse } from 'next/server';
 
+export const revalidate = 0;
+
 export async function GET(_request: Request) {
   const posts = await getSectionTopicPostFiles();
   const randomIndex = Math.floor(Math.random() * posts.length);

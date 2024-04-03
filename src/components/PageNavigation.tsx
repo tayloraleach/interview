@@ -14,8 +14,7 @@ export default function PageNavigation() {
     const currentPost = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 
     if (randomPost.href === currentPost) {
-      window.localStorage.setItem(LOCAL_STORAGE_KEY, '');
-      return handleGoToRandomQuestion();
+      handleGoToRandomQuestion();
     } else {
       window.location = randomPost.href;
     }
