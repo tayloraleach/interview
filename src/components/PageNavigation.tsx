@@ -45,7 +45,7 @@ export default function PageNavigation() {
           </div>
           <ul
             tabIndex={0}
-            className='menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-300 rounded-box w-52'>
+            className='menu menu-sm dropdown-content mt-3 z-10 p-2 shadow bg-base-300 rounded-box w-52'>
             <MenuItems />
           </ul>
         </div>
