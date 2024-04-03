@@ -27,7 +27,7 @@ export default function PageNavigation() {
   return (
     <div
       key={pathname}
-      className='navbar bg-base-300 sticky top-0 z-10 border-solid border-b border-accent'>
+      className='navbar bg-base-100 sticky top-0 z-10 border-solid border-b border-base-300 shadow-lg'>
       <div className='navbar-start'>
         <div className='dropdown'>
           <div tabIndex={0} role='button' className='btn btn-ghost lg:hidden'>
@@ -47,7 +47,7 @@ export default function PageNavigation() {
           </div>
           <ul
             tabIndex={0}
-            className='menu menu-sm dropdown-content mt-3 z-10 p-2 shadow bg-base-300 rounded-box w-52'>
+            className='menu menu-sm dropdown-content mt-5 z-10 p-2 shadow-xl bg-base-100 rounded-box w-52'>
             <MenuItems />
           </ul>
         </div>
